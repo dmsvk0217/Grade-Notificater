@@ -5,7 +5,7 @@ import json
 url = "https://kauth.kakao.com/oauth/token"
 rest_api_key = "c08335d919e080518166839ce5d2a4cd"
 redirect_uri = "https://example.com/oauth"
-authorize_code = "LHVRpB4-dyEUa5daJegP5RIuZvM0c3ZDW2K-Ecz7830V1PH0O8nC_LR2CRcMXtcGgr1R4Qo9cpgAAAGI_I9QBg"
+authorize_code = "X_FDAj3Y8oOA4-2c5Qh9WUlXNnwkUDWyEmIdXCV5_Sao2B111qHvYAaNGyizQlJZPqSYZQorDSAAAAGJAams6w"
 
 
 def f_auth():

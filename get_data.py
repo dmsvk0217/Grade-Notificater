@@ -1,11 +1,13 @@
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+from bs4 import BeautifulSoup
 from tabulate import tabulate
+from util import get_current_time
 
 
 # Function to crawl the table and return the data
@@ -14,7 +16,6 @@ def crawl_table():
     options.add_argument("--headless")  # Example: adding a headless argument
     driver_path = "/home/bdh/chromedriver"
     service = Service(driver_path)
-    print("debug1")
 
     driver = webdriver.Chrome(service=service, options=options)
 
@@ -56,6 +57,7 @@ def crawl_table():
         table_data.append(row_data)
 
     # Print the table in a tabular format
+    print(get_current_time())
     print(tabulate(table_data, headers="firstrow", tablefmt="grid"))
     driver.quit()
     return table_data
