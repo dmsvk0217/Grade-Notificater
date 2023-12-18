@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "puppeteer": "^21.6.1",
+    "solapi": "^5.2.4"
+  }
+}
