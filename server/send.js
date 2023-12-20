@@ -1,7 +1,9 @@
 const { SolapiMessageService } = require("solapi");
+const { messageServiceKey } = require("./config");
+
 const messageService = new SolapiMessageService(
-  "NCSYJDPXUWIOQQFE",
-  "Y25FXFVIOIXPQNIGW85VHTSBVM9VHPWN"
+  messageServiceKey.apikey,
+  messageServiceKey.secretapikey
 );
 
 messageService.send({

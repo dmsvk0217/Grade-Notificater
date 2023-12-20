@@ -1,7 +1,25 @@
 {
+  "name": "server",
+  "version": "1.0.0",
+  "description": "hisnet grade notification server",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dmsvk0217"
+  },
+  "author": "dmsvk01",
+  "license": "ISC",
   "dependencies": {
+    "express": "^4.18.2",
     "firebase": "^10.7.1",
     "puppeteer": "^21.6.1",
     "solapi": "^5.2.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "scripts": {
+    "start": "node main.js",
+    "dev": "nodemon main.js"
   }
 }
