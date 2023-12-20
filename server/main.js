@@ -1,5 +1,7 @@
 const express = require("express");
 const clientAPI = require("./client_api.js");
+const firebasedb = require("./firebase.js");
+const sendGradeUpdateMsg = require("./send.js");
 const {
   id,
   pw,
@@ -20,7 +22,7 @@ const port = 3000;
 // 라우팅 설정
 app.get("/submit", async (req, res) => {
   try {
-    const data = await clientAPI.crawlTable(id, pw);
+    const data = await clientAPI.crawlGradeArray(id, pw);
     if (data === msgLoginFail) {
       res.status(400).json({ error: msgLoginFail });
     } else {
@@ -105,11 +107,30 @@ app.listen(port, () => {
 });
 
 // 5초마다 실행될 함수
-function gradeNotofication() {
+async function gradeNotofication() {
   // 모든 유저데이터 가져오기
+  const uesrs = await firebasedb.getAllUser();
+  // console.log("🚀 ~ file: main.js:112 ~ gradeNotofication ~ uesrs:", uesrs);
+
   // for문돌면서
-  // table가져오기
+  uesrs.forEach(async (user) => {
+    const id = user.id;
+    const pw = user.pw;
+    const tableCur = await clientAPI.crawlTable(id, pw);
+    const storedGradeArray = user.data;
+
+    tableCur.forEach((row, index) => {
+      if (index !== 0 && row[row.length - 3] !== storedGradeArray[index]) {
+        // '성적' 제외 && 성적이 업데이트 되었을 시 과목명 저장
+        const updatedSubject = row[2];
+        console.log(
+          id + "님의 " + updatedSubject + "의 성적이 업데이트 되었습니다."
+        );
+        sendGradeUpdateMsg(updatedSubject, phone);
+      }
+    });
+  });
 }
 
-// 5초마다 함수를 실행하기 위한 setInterval
+// 1분 함수를 실행하기 위한 setInterval
 setInterval(gradeNotofication, 5000);

@@ -7,6 +7,16 @@ const {
 } = require("firebase/firestore");
 const db = require("./db.js");
 
+exports.getAllUser = async () => {
+  const querySnapshot = await getDocs(collection(db, "user"));
+  const result = [];
+  querySnapshot.forEach((doc) => {
+    // console.log(doc.id, " => ", doc.data());
+    result.push(doc.data());
+  });
+  return result;
+};
+
 exports.addUser = async (id, pw, phone, data) => {
   try {
     const docRef = await addDoc(collection(db, "user"), {

@@ -51,10 +51,15 @@ exports.crawlTable = async (id, pw) => {
   // console.log(new Date().toLocaleString());
   console.table(result);
 
-  result = result.map((row) => row[row.length - 3]);
-
   await browser.close();
   return result;
+};
+
+exports.tableToGradeArray = (table) => table.map((row) => row[row.length - 3]);
+
+exports.crawlGradeArray = async (id, pw) => {
+  const table = await crawlTable(id, pw);
+  return tableToGradeArray(table);
 };
 
 exports.loginVaildCheck = async (id, pw) => {

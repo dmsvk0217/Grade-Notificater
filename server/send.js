@@ -6,8 +6,12 @@ const messageService = new SolapiMessageService(
   messageServiceKey.secretapikey
 );
 
-messageService.send({
-  to: "01056615102",
-  from: "01056615102",
-  text: "컴퓨터네트워크의 성적이 업데이트되었습니다.",
-});
+function sendGradeUpdateMsg(updatedSubject, phone) {
+  messageService.send({
+    to: "01056615102",
+    from: phone,
+    text: `${updatedSubject}의 성적이 업데이트되었습니다.`,
+  });
+}
+
+module.exports = sendGradeUpdateMsg;
