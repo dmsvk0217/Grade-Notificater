@@ -49,7 +49,9 @@ exports.crawlTable = async (id, pw) => {
     });
   });
   // console.log(new Date().toLocaleString());
-  // console.table(result);
+  console.table(result);
+
+  result = result.map((row) => row[row.length - 3]);
 
   await browser.close();
   return result;
@@ -94,6 +96,14 @@ exports.idVaildCheck = async (id) => {
 exports.phoneVaildCheck = async (phone) => {
   try {
     return await firebasedb.checkDuplicatePhone(phone);
+  } catch (error) {
+    console.error("error:", error);
+  }
+};
+
+exports.submit = async (id, pw, phone, data) => {
+  try {
+    return await firebasedb.addUser(id, pw, phone, data);
   } catch (error) {
     console.error("error:", error);
   }

@@ -16,8 +16,10 @@ exports.addUser = async (id, pw, phone, data) => {
       data: data,
     });
     console.log("User added with ID:", docRef.id);
+    return true;
   } catch (error) {
     console.error("Error adding document:", error);
+    return false;
   }
 };
 
