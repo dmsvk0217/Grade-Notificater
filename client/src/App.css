@@ -72,6 +72,25 @@ button:active {
   flex: 1;
 }
 
+.done-row {
+  display: flex;
+}
+
+.done-texts {
+  flex: 4;
+}
+
+.done-text {
+  flex: 4;
+  text-align: center;
+  margin: 0;
+  font-size: 13px;
+}
+
+.done-icon {
+  flex: 1;
+}
+
 label {
   display: block;
 }

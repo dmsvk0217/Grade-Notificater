@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { CiCircleCheck } from "react-icons/ci";
+import { GiPartyPopper } from "react-icons/gi";
+
 import "./App.css";
-import Modal from "./modal.js";
+import Modal from "react-modal";
 import {
   msgIdInvaild,
   msgIdDupError,
@@ -31,14 +33,15 @@ function App() {
   const [checkedPhone, setCheckedPhone] = useState(false);
   const [CheckedSubmit, setCheckedSubmit] = useState(false);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
-    setIsModalOpen(true);
+    setModalIsOpen(true);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    setModalIsOpen(false);
+    window.location.reload();
   };
 
   const handleIdChange = (e) => {
@@ -186,8 +189,8 @@ function App() {
         setId("");
         setPassword("");
         setPhone("");
-        setCheckedSubmit(true);
         openModal();
+        setCheckedSubmit(true);
       }
     } catch (error) {
       if (
@@ -205,6 +208,37 @@ function App() {
 
   return (
     <div className="app-container">
+      <div>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={{
+            overlay: {
+              backgroundColor: "gray",
+            },
+            content: {
+              paddingBottom: "0",
+              color: "black",
+              left: "20vw",
+              right: "20vw",
+              top: "40vh",
+              bottom: "43vh",
+            },
+          }}
+        >
+          <div className="done-row">
+            <GiPartyPopper className="done-icon" size={25} />
+            <div className="done-texts">
+              <p className="done-text">축하합니다. </p>
+              <p className="done-text">등록이 완료되었습니다!</p>
+            </div>
+            <GiPartyPopper className="done-icon" size={25} />
+          </div>
+          <br />
+
+          <button onClick={closeModal}>닫기</button>
+        </Modal>
+      </div>
       <form className="signup-form">
         <h2 className="header-text">히즈넷 성적 알림 서비스</h2>
         <div className="content-text">
@@ -306,8 +340,6 @@ function App() {
         </button>
         {submitError && <div className="error-message">{submitError}</div>}
       </form>
-      <button onClick={openModal}>Open Modal</button>
-      <Modal isOpen={isModalOpen} handleClose={closeModal} />
     </div>
   );
 }
