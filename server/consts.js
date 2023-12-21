@@ -3,8 +3,8 @@ const pw = "111111";
 const phone = "01056615102";
 const urlLogin = "https://hisnet.handong.edu/";
 const urlHome = "https://hisnet.handong.edu/haksa/record/HREC130M.php";
-const msgLoginFail = "Incorrect Account";
-const msgLoginsuccess = "Correct Account";
+const msgAccountInvaild = "Incorrect Account";
+const msgAccountVaild = "Correct Account";
 const msgPhoneVaild = "Vaild Phone";
 const msgPhoneInvaild = "Invaild Phone";
 const msgIdVaild = "Vaild Id";
@@ -28,8 +28,8 @@ module.exports = {
   idXPath,
   passwordXPath,
   loginXPath,
-  msgLoginFail,
-  msgLoginsuccess,
+  msgAccountInvaild,
+  msgAccountVaild,
   msgPhoneVaild,
   msgPhoneInvaild,
   msgIdVaild,

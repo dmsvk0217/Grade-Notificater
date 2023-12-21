@@ -10,8 +10,15 @@ body {
   height: 100vh;
 }
 
+.header-text {
+  text-align: center;
+}
+.content-text {
+  font-size: 14px;
+}
+
 .signup-form {
-  width: 300px;
+  width: 250px;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -48,16 +55,25 @@ button:active {
   transform: translateY(2px);
 }
 
-.submit-button {
-}
-
 .input-button {
   margin-left: 5px;
 }
 
+.checked-button {
+  display: flex;
+}
+
+.checked-text {
+  flex: 3;
+  margin: 0;
+}
+
+.checked-icon {
+  flex: 1;
+}
+
 label {
   display: block;
-  font-size: 15px;
 }
 
 input {
@@ -74,5 +90,5 @@ button:hover {
 
 .error-message {
   color: red;
-  font-size: 14px;
+  font-size: 12px;
 }

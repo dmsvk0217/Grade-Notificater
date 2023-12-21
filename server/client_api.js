@@ -58,11 +58,11 @@ exports.crawlTable = async (id, pw) => {
 exports.tableToGradeArray = (table) => table.map((row) => row[row.length - 3]);
 
 exports.crawlGradeArray = async (id, pw) => {
-  const table = await crawlTable(id, pw);
-  return tableToGradeArray(table);
+  const table = await this.crawlTable(id, pw);
+  return this.tableToGradeArray(table);
 };
 
-exports.loginVaildCheck = async (id, pw) => {
+exports.acountVaildCheck = async (id, pw) => {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
 
