@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { CiCircleCheck } from "react-icons/ci";
 import { GiPartyPopper } from "react-icons/gi";
-
 import "./App.css";
 import Modal from "react-modal";
 import {
@@ -18,6 +17,31 @@ import {
   msgSubmitSuccess,
 } from "./consts.js";
 
+const serverURL = require("./config.js");
+
+const ContentDoneCheck = (
+  <div className="checked-button">
+    <p className="checked-text">확인됨</p>
+    <CiCircleCheck className="checked-icon" />
+  </div>
+);
+
+const Loader = (
+  <svg
+    width="13"
+    className="spinner"
+    height="13"
+    viewBox="0 0 13 14"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M4.38798 12.616C3.36313 12.2306 2.46328 11.5721 1.78592 10.7118C1.10856 9.85153 0.679515 8.82231 0.545268 7.73564C0.411022 6.64897 0.576691 5.54628 1.02433 4.54704C1.47197 3.54779 2.1845 2.69009 3.08475 2.06684C3.98499 1.4436 5.03862 1.07858 6.13148 1.01133C7.22435 0.944078 8.31478 1.17716 9.28464 1.68533C10.2545 2.19349 11.0668 2.95736 11.6336 3.89419C12.2004 4.83101 12.5 5.90507 12.5 7"
+      stroke="white"
+    />
+  </svg>
+);
+
 function App() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -31,7 +55,15 @@ function App() {
   const [checkedID, setCheckedID] = useState(false);
   const [checkedAccount, setCheckedAccount] = useState(false);
   const [checkedPhone, setCheckedPhone] = useState(false);
-  const [CheckedSubmit, setCheckedSubmit] = useState(false);
+
+  const [loadingId, setLoadingId] = useState(false);
+  const [buttonContentId, setButtonContentId] = useState("중복확인");
+  const [loadingAccount, setLoadingAccount] = useState(false);
+  const [buttonContentAccount, setButtonContentAccount] = useState("계정확인");
+  const [loadingPhone, setLoadingPhone] = useState(false);
+  const [buttonContentPhone, setButtonContentPhone] = useState("중복확인");
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [buttonContentSubmit, setButtonContentSubmit] = useState("등록하기");
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -48,32 +80,41 @@ function App() {
     setId(e.target.value);
     setCheckedID(false);
     setCheckedAccount(false);
+    setLoadingId(false);
+    setButtonContentId("중복확인");
+    setButtonContentAccount("계정확인");
+    setLoadingAccount(false);
   };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
     setCheckedAccount(false);
+    setLoadingAccount(false);
+    setButtonContentAccount("계정확인");
   };
 
   const handlePhoneChange = (e) => {
     setPhone(e.target.value);
     setCheckedPhone(false);
+    setLoadingPhone(false);
+    setButtonContentPhone("중복확인");
   };
 
   const handleCheckDuplicateId = async () => {
     console.log("clicked id");
+    setLoadingId(true);
+    setButtonContentId(Loader);
     try {
-      const response = await axios.post(
-        "http://localhost:4000/api/idVaildCheck",
-        {
-          id: id,
-        }
-      );
+      const response = await axios.post(`${serverURL}:4000/api/idVaildCheck`, {
+        id: id,
+      });
       console.log("🚀 ~ file: App.js:35 ~ result ~ response:", response.data);
       const result = response.data.result;
       if (response.status === 200 && result === msgIdVaild) {
         setIdError("");
         setCheckedID(true);
+        setLoadingId(true);
+        setButtonContentId(ContentDoneCheck);
       }
     } catch (error) {
       if (
@@ -82,26 +123,32 @@ function App() {
         error.response.data.error === msgIdInvaild
       ) {
         setIdError(msgIdDupError);
+        setLoadingId(false);
+        setButtonContentId("중복확인");
       } else {
         setIdError("*알 수 없는 서버오류 발생.");
+        setLoadingId(false);
         console.error("Error fetching data:", error);
+        setButtonContentId("중복확인");
       }
     }
   };
 
-  const handleCheckAccountValidity = async () => {
+  const handleCheckAccountVaildation = async () => {
     console.log("clicked Account");
+    if (id === "") {
+      setAccountError("*아이디를 입력해주세요.");
+      return;
+    }
+    if (password === "") {
+      setAccountError("*비밀번호를 입력해주세요.");
+      return;
+    }
+    setLoadingAccount(true);
+    setButtonContentAccount(Loader);
     try {
-      if (id === "") {
-        setAccountError("*아이디를 입력해주세요.");
-        return;
-      }
-      if (password === "") {
-        setAccountError("*비밀번호를 입력해주세요.");
-        return;
-      }
       const response = await axios.post(
-        "http://localhost:4000/api/AccountVaildCheck",
+        `${serverURL}:4000/api/AccountVaildCheck`,
         {
           id: id,
           pw: password,
@@ -109,12 +156,14 @@ function App() {
       );
       const result = response.data.result;
       console.log(
-        "🚀 ~ file: App.js:84 ~ handleCheckAccountValidity ~ result:",
+        "🚀 ~ file: App.js:84 ~ handleCheckAccountVaildation ~ result:",
         result
       );
       if (response.status === 200 && result === msgAccountVaild) {
         setAccountError("");
         setCheckedAccount(true);
+        setLoadingAccount(true);
+        setButtonContentAccount(ContentDoneCheck);
       }
     } catch (error) {
       if (
@@ -123,9 +172,13 @@ function App() {
         error.response.data.error === msgAccountInvaild
       ) {
         setAccountError("*유효하지 않은 히즈넷 계정입니다.");
+        setLoadingAccount(false);
+        setButtonContentAccount("계정확인");
       } else {
         setAccountError("*알 수 없는 서버오류 발생.");
         console.error("Error fetching data:", error);
+        setLoadingAccount(false);
+        setButtonContentAccount("계정확인");
       }
     }
   };
@@ -139,9 +192,12 @@ function App() {
       return;
     }
 
+    setLoadingPhone(true);
+    setButtonContentPhone(Loader);
+
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/phoneVaildCheck",
+        `${serverURL}:4000/api/phoneVaildCheck`,
         {
           phone: phone,
         }
@@ -154,6 +210,8 @@ function App() {
       if (response.status === 200 && result === msgPhoneVaild) {
         setPhoneError("");
         setCheckedPhone(true);
+        setLoadingPhone(true);
+        setButtonContentPhone(ContentDoneCheck);
       }
     } catch (error) {
       if (
@@ -162,9 +220,13 @@ function App() {
         error.response.data.error === msgPhoneInvaild
       ) {
         setPhoneError(msgPhoneDupError);
+        setLoadingPhone(false);
+        setButtonContentPhone("중복확인");
       } else {
         setPhoneError("*알 수 없는 서버오류 발생.");
         console.error("Error fetching data:", error);
+        setLoadingPhone(false);
+        setButtonContentPhone("중복확인");
       }
     }
   };
@@ -174,9 +236,11 @@ function App() {
       setSubmitError("*모든 항목이 확인되어야 합니다.");
       return;
     }
+    setButtonContentSubmit(Loader);
+    setLoadingSubmit(true);
 
     try {
-      const response = await axios.post("http://localhost:4000/api/submit", {
+      const response = await axios.post(`${serverURL}:4000/api/submit`, {
         id: id,
         pw: password,
         phone: phone,
@@ -186,11 +250,8 @@ function App() {
       console.log("🚀 ~ file: App.js:168 ~ handleSubmit ~ result:", result);
       if (response.status === 200 && result === msgSubmitSuccess) {
         setSubmitError("");
-        setId("");
-        setPassword("");
-        setPhone("");
         openModal();
-        setCheckedSubmit(true);
+        setLoadingSubmit(false);
       }
     } catch (error) {
       if (
@@ -199,9 +260,11 @@ function App() {
         error.response.data.error === msgSubmitFail
       ) {
         setSubmitError(msgPhoneDupError);
+        setLoadingSubmit(false);
       } else {
         setSubmitError("*알 수 없는 서버오류 발생.");
         console.error("Error fetching data:", error);
+        setLoadingSubmit(false);
       }
     }
   };
@@ -263,16 +326,10 @@ function App() {
               <button
                 type="button"
                 className="input-button"
+                disabled={loadingId}
                 onClick={handleCheckDuplicateId}
               >
-                {checkedID ? (
-                  <div className="checked-button">
-                    <p className="checked-text">확인됨</p>
-                    <CiCircleCheck className="checked-icon" />
-                  </div>
-                ) : (
-                  "중복확인"
-                )}
+                {buttonContentId}
               </button>
             </div>
             {idError && <div className="error-message">{idError}</div>}
@@ -291,16 +348,10 @@ function App() {
               <button
                 type="button"
                 className="input-button"
-                onClick={handleCheckAccountValidity}
+                disabled={loadingAccount}
+                onClick={handleCheckAccountVaildation}
               >
-                {checkedAccount ? (
-                  <div className="checked-button">
-                    <p className="checked-text">확인됨</p>
-                    <CiCircleCheck className="checked-icon" />
-                  </div>
-                ) : (
-                  "계정확인"
-                )}
+                {buttonContentAccount}
               </button>
             </div>
             {accountError && (
@@ -320,23 +371,17 @@ function App() {
             <button
               type="button"
               className="input-button"
+              disabled={loadingPhone}
               onClick={handleCheckDuplicatePhone}
             >
-              {checkedPhone ? (
-                <div className="checked-button">
-                  <p className="checked-text">확인됨</p>
-                  <CiCircleCheck className="checked-icon" />
-                </div>
-              ) : (
-                "중복확인"
-              )}
+              {buttonContentPhone}
             </button>
           </div>
           {phoneError && <div className="error-message">{phoneError}</div>}
         </div>
 
-        <button type="button" onClick={handleSubmit}>
-          등록하기
+        <button type="button" disabled={loadingSubmit} onClick={handleSubmit}>
+          {buttonContentSubmit}
         </button>
         {submitError && <div className="error-message">{submitError}</div>}
       </form>

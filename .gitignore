@@ -4,3 +4,4 @@ ver_python_kakao
 
 # dependencies
 /node_modules
+.DS_Store

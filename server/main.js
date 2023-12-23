@@ -17,6 +17,7 @@ const {
 
 const app = express();
 const port = 4000;
+const sendTimeInterval = 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -108,6 +109,8 @@ async function gradeNotofication() {
   const uesrs = await firebasedb.getAllUser();
   // console.log("🚀 ~ file: main.js:112 ~ gradeNotofication ~ uesrs:", uesrs);
 
+  console.log(new Date().toLocaleString());
+
   // for문돌면서
   uesrs.forEach(async (user) => {
     const id = user.id;
@@ -122,11 +125,26 @@ async function gradeNotofication() {
         console.log(
           id + "님의 " + updatedSubject + "의 성적이 업데이트 되었습니다."
         );
-        // sendGradeUpdateMsg(updatedSubject, phone);
+        sendGradeUpdateMsg(updatedSubject, phone);
       }
     });
   });
 }
 
-// 1분 함수를 실행하기 위한 setInterval
-// setInterval(gradeNotofication, 5000);
+// 1시간 마다 함수를 실행하기 위한 setInterval
+setInterval(gradeNotofication, sendTimeInterval);
+
+function getCurrentTime() {
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const seconds = now.getSeconds();
+
+  // 시, 분, 초를 두 자리 수로 표현하도록 포맷팅
+  const formattedHours = hours < 10 ? "0" + hours : hours;
+  const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+  const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+
+  // 현재 시간 출력
+  console.log(`${formattedHours}:${formattedMinutes}:${formattedSeconds}`);
+}

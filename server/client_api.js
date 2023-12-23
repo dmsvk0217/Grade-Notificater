@@ -11,7 +11,15 @@ const {
 } = require("./consts.js");
 
 exports.crawlTable = async (id, pw) => {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({
+    headless: true,
+    PUPPETEER_DISABLE_HEADLESS_WARNING: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--PUPPETEER_DISABLE_HEADLESS_WARNING",
+    ],
+  });
   const page = await browser.newPage();
 
   await page.goto(urlLogin);
@@ -48,7 +56,7 @@ exports.crawlTable = async (id, pw) => {
       return Array.from(cells, (cell) => cell.innerText.trim());
     });
   });
-  // console.log(new Date().toLocaleString());
+
   console.table(result);
 
   await browser.close();
@@ -87,6 +95,7 @@ exports.acountVaildCheck = async (id, pw) => {
   if (page.url() === urlLogin) {
     return false;
   }
+
   return true;
 };
 
