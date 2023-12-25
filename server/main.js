@@ -125,9 +125,15 @@ async function gradeNotofication() {
     const id = user.id;
     const pw = user.pw;
     const phone = user.phone;
-    const tableCur = await clientAPI.crawlTable(id, pw);
+    const tableCur = [];
     const storedGradeArray = user.data;
     const updatedGradeArray = [...storedGradeArray];
+
+    try {
+      tableCur = await clientAPI.crawlTable(id, pw);
+    } catch (error) {
+      console.log(error);
+    }
 
     tableCur.forEach((row, index) => {
       if (index !== 0 && row[row.length - 3] !== storedGradeArray[index]) {
