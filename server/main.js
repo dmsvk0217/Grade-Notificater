@@ -17,8 +17,8 @@ const {
 
 const app = express();
 const port = 4000;
-const sendTimeInterval = 60 * 60 * 1000;
-// const sendTimeInterval = 5000;
+// const sendTimeInterval = 60 * 60 * 1000;
+const sendTimeInterval = 3000;
 
 app.use(
   cors({
@@ -114,20 +114,20 @@ app.listen(port, () => {
 // 5초마다 실행될 함수
 async function gradeNotofication() {
   // 모든 유저데이터 가져오기
-  const uesrDocs = await firebasedb.getAllUser();
+  const userDocs = await firebasedb.getAllUser();
   // console.log("🚀 ~ file: main.js:112 ~ gradeNotofication ~ uesrs:", uesrs);
 
   console.log("[gradeNotofication] " + new Date().toLocaleString());
 
   // for문돌면서
-  for (const userDoc of uesrDocs) {
+  for (const userDoc of userDocs) {
     const user = userDoc.data();
     const id = user.id;
     const pw = user.pw;
     const phone = user.phone;
-    const tableCur = [];
+    let tableCur = [];
     const storedGradeArray = user.data;
-    const updatedGradeArray = [...storedGradeArray];
+    let updatedGradeArray = [...storedGradeArray];
 
     try {
       tableCur = await clientAPI.crawlTable(id, pw);
@@ -135,7 +135,11 @@ async function gradeNotofication() {
       console.log(error);
     }
 
-    tableCur.forEach((row, index) => {
+    console.log("🚀 ", id, " : ", clientAPI.tableToGradeArray(tableCur));
+
+    for (let index = 0; index < tableCur.length; index++) {
+      const row = tableCur[index];
+
       if (index !== 0 && row[row.length - 3] !== storedGradeArray[index]) {
         // '성적' 제외 && 성적이 업데이트 되었을 시 과목명 저장
         const updatedSubject = row[2];
@@ -153,7 +157,7 @@ async function gradeNotofication() {
         sendGradeUpdateMsg(updatedSubject, phone);
         firebasedb.updateGradeArrayByUserdoc(userDoc, updatedGradeArray);
       }
-    });
+    }
   }
 }
 
