@@ -114,14 +114,14 @@ app.listen(port, () => {
 // 5초마다 실행될 함수
 async function gradeNotofication() {
   // 모든 유저데이터 가져오기
-  const uesrsDocs = await firebasedb.getAllUser();
+  const uesrDocs = await firebasedb.getAllUser();
   // console.log("🚀 ~ file: main.js:112 ~ gradeNotofication ~ uesrs:", uesrs);
 
   console.log("[gradeNotofication] " + new Date().toLocaleString());
 
   // for문돌면서
-  uesrsDocs.forEach(async (userDoc) => {
-    user = userDoc.data();
+  for (const userDoc of uesrDocs) {
+    const user = userDoc.data();
     const id = user.id;
     const pw = user.pw;
     const phone = user.phone;
@@ -154,7 +154,7 @@ async function gradeNotofication() {
         firebasedb.updateGradeArrayByUserdoc(userDoc, updatedGradeArray);
       }
     });
-  });
+  }
 }
 
 // 1시간 마다 함수를 실행하기 위한 setInterval
