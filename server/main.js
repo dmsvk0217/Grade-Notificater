@@ -19,7 +19,12 @@ const app = express();
 const port = 4000;
 const sendTimeInterval = 5000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin:
+      "http://ec2-43-200-184-150.ap-northeast-2.compute.amazonaws.com:3000/",
+  })
+);
 app.use(express.json());
 
 // 라우팅 설정

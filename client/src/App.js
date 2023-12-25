@@ -105,7 +105,7 @@ function App() {
     setLoadingId(true);
     setButtonContentId(Loader);
     try {
-      const response = await axios.post(`${serverURL}:4000/api/idVaildCheck`, {
+      const response = await axios.post(`${serverURL}/api/idVaildCheck`, {
         id: id,
       });
       console.log("🚀 ~ file: App.js:35 ~ result ~ response:", response.data);
@@ -147,13 +147,10 @@ function App() {
     setLoadingAccount(true);
     setButtonContentAccount(Loader);
     try {
-      const response = await axios.post(
-        `${serverURL}:4000/api/AccountVaildCheck`,
-        {
-          id: id,
-          pw: password,
-        }
-      );
+      const response = await axios.post(`${serverURL}/api/AccountVaildCheck`, {
+        id: id,
+        pw: password,
+      });
       const result = response.data.result;
       console.log(
         "🚀 ~ file: App.js:84 ~ handleCheckAccountVaildation ~ result:",
@@ -196,12 +193,9 @@ function App() {
     setButtonContentPhone(Loader);
 
     try {
-      const response = await axios.post(
-        `${serverURL}:4000/api/phoneVaildCheck`,
-        {
-          phone: phone,
-        }
-      );
+      const response = await axios.post(`${serverURL}/api/phoneVaildCheck`, {
+        phone: phone,
+      });
       const result = response.data.result;
       console.log(
         "🚀 ~ file: App.js:89 ~ handleCheckDuplicatePhone ~ result:",
@@ -240,7 +234,7 @@ function App() {
     setLoadingSubmit(true);
 
     try {
-      const response = await axios.post(`${serverURL}:4000/api/submit`, {
+      const response = await axios.post(`${serverURL}/api/submit`, {
         id: id,
         pw: password,
         phone: phone,
