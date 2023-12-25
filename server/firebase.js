@@ -3,6 +3,7 @@ const {
   addDoc,
   getDocs,
   query,
+  updateDoc,
   where,
 } = require("firebase/firestore");
 const db = require("./db.js");
@@ -12,7 +13,7 @@ exports.getAllUser = async () => {
   const result = [];
   querySnapshot.forEach((doc) => {
     // console.log(doc.id, " => ", doc.data());
-    result.push(doc.data());
+    result.push(doc);
   });
   return result;
 };
@@ -55,4 +56,10 @@ exports.checkDuplicateID = async (id) => {
     console.error("Error checking duplicate id number:", error.message);
     return false; // 에러가 발생하면 중복이 없다고 가정
   }
+};
+
+exports.updateGradeArrayByUserdoc = (queryDocSnapshot, updatedGradeArray) => {
+  return updateDoc(queryDocSnapshot.ref, {
+    data: updatedGradeArray,
+  });
 };

@@ -17,7 +17,8 @@ const {
 
 const app = express();
 const port = 4000;
-const sendTimeInterval = 5000;
+const sendTimeInterval = 60 * 60 * 1000;
+// const sendTimeInterval = 5000;
 
 app.use(
   cors({
@@ -113,26 +114,38 @@ app.listen(port, () => {
 // 5초마다 실행될 함수
 async function gradeNotofication() {
   // 모든 유저데이터 가져오기
-  const uesrs = await firebasedb.getAllUser();
+  const uesrsDocs = await firebasedb.getAllUser();
   // console.log("🚀 ~ file: main.js:112 ~ gradeNotofication ~ uesrs:", uesrs);
 
-  console.log(new Date().toLocaleString());
+  console.log("[gradeNotofication] " + new Date().toLocaleString());
 
   // for문돌면서
-  uesrs.forEach(async (user) => {
+  uesrsDocs.forEach(async (userDoc) => {
+    user = userDoc.data();
     const id = user.id;
     const pw = user.pw;
+    const phone = user.phone;
     const tableCur = await clientAPI.crawlTable(id, pw);
     const storedGradeArray = user.data;
+    const updatedGradeArray = [...storedGradeArray];
 
     tableCur.forEach((row, index) => {
       if (index !== 0 && row[row.length - 3] !== storedGradeArray[index]) {
         // '성적' 제외 && 성적이 업데이트 되었을 시 과목명 저장
         const updatedSubject = row[2];
+        updatedGradeArray[index] = row[row.length - 3];
         console.log(
-          id + "님의 " + updatedSubject + "의 성적이 업데이트 되었습니다."
+          id +
+            "님의 " +
+            updatedSubject +
+            "의 성적이 " +
+            storedGradeArray[index] +
+            "에서" +
+            row[row.length - 3] +
+            "으로 업데이트 되었습니다."
         );
         sendGradeUpdateMsg(updatedSubject, phone);
+        firebasedb.updateGradeArrayByUserdoc(userDoc, updatedGradeArray);
       }
     });
   });
@@ -140,18 +153,3 @@ async function gradeNotofication() {
 
 // 1시간 마다 함수를 실행하기 위한 setInterval
 setInterval(gradeNotofication, sendTimeInterval);
-
-function getCurrentTime() {
-  const now = new Date();
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const seconds = now.getSeconds();
-
-  // 시, 분, 초를 두 자리 수로 표현하도록 포맷팅
-  const formattedHours = hours < 10 ? "0" + hours : hours;
-  const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
-  const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
-
-  // 현재 시간 출력
-  console.log(`${formattedHours}:${formattedMinutes}:${formattedSeconds}`);
-}
