@@ -7,10 +7,10 @@ const {
   idXPath,
   passwordXPath,
   loginXPath,
-  msgLoginsuccess,
 } = require("./consts.js");
 
-exports.crawlTable = async (id, pw) => {
+exports.crawlTable = async (id, pw, phone) => {
+  // console.log(phone, "browser");
   const browser = await puppeteer.launch({
     headless: true,
     PUPPETEER_DISABLE_HEADLESS_WARNING: true,
@@ -20,34 +20,44 @@ exports.crawlTable = async (id, pw) => {
       "--PUPPETEER_DISABLE_HEADLESS_WARNING",
     ],
   });
+  console.log(phone, "newPage");
   const page = await browser.newPage();
 
+  // console.log(phone, "goto(urlLogin)");
   await page.goto(urlLogin);
 
   const frame = page.frames().find((frame) => frame.name() === "MainFrame");
 
+  // console.log(phone, "idXPath");
   const idInput = await frame.waitForSelector(idXPath);
+  // console.log(phone, "typeid");
   await idInput.type(id);
 
+  // console.log(phone, "passwordXPath");
   const passwordInput = await frame.waitForSelector(passwordXPath);
+  // console.log(phone, "typepw");
   await passwordInput.type(pw);
 
+  // console.log(phone, "click");
   await frame.evaluate(
     (loginXPath) => document.querySelector(loginXPath).click(),
     loginXPath
   );
 
-  await new Promise((page) => setTimeout(page, 300));
+  // console.log(phone, "1000");
+  await new Promise((page) => setTimeout(page, 1000));
 
   // console.log(page.url());
   if (page.url() === urlLogin) {
     return msgLoginFail;
   }
 
+  // console.log(phone, "urlHome");
   await page.goto(urlHome);
 
   // Get table data
-  var result = await page.evaluate(() => {
+  // console.log(phone, "Get table data");
+  let result = await page.evaluate(() => {
     const table = document.getElementById("att_list");
     const rows = table.querySelectorAll("tr");
 
@@ -58,6 +68,7 @@ exports.crawlTable = async (id, pw) => {
   });
 
   // console.table(result);
+  // console.log(phone, "browser.close();");
 
   await browser.close();
   return result;

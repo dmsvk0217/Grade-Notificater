@@ -18,7 +18,7 @@ const {
 const app = express();
 const port = 4000;
 // const sendTimeInterval = 60 * 60 * 1000;
-const sendTimeInterval = 3000;
+const sendTimeInterval = 5000;
 
 app.use(
   cors({
@@ -114,7 +114,7 @@ app.listen(port, () => {
 // 5초마다 실행될 함수
 async function gradeNotofication() {
   // 모든 유저데이터 가져오기
-  const userDocs = await firebasedb.getAllUser();
+  let userDocs = await firebasedb.getAllUser();
   // console.log("🚀 ~ file: main.js:112 ~ gradeNotofication ~ uesrs:", uesrs);
 
   console.log("[gradeNotofication] " + new Date().toLocaleString());
@@ -130,7 +130,9 @@ async function gradeNotofication() {
     let updatedGradeArray = [...storedGradeArray];
 
     try {
-      tableCur = await clientAPI.crawlTable(id, pw);
+      console.log("before : ", tableCur);
+      tableCur = await clientAPI.crawlTable(id, pw, phone);
+      console.log("after : ", tableCur);
     } catch (error) {
       console.log(error);
     }
@@ -154,7 +156,7 @@ async function gradeNotofication() {
             row[row.length - 3] +
             "으로 업데이트 되었습니다."
         );
-        sendGradeUpdateMsg(updatedSubject, phone);
+        // sendGradeUpdateMsg(updatedSubject, phone);
         firebasedb.updateGradeArrayByUserdoc(userDoc, updatedGradeArray);
       }
     }
