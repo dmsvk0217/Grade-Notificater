@@ -9,6 +9,9 @@ const {
   loginXPath,
 } = require("./consts.js");
 
+const TIMEOUT_ACCOUNT_VALID = 1000;
+const TIMEOUT_GET_TABLE = 3000;
+
 exports.crawlTable = async (id, pw, phone) => {
   // console.log(phone, "browser");
   const browser = await puppeteer.launch({
@@ -45,7 +48,7 @@ exports.crawlTable = async (id, pw, phone) => {
   );
 
   // console.log(phone, "1000");
-  await new Promise((page) => setTimeout(page, 1000));
+  await new Promise((page) => setTimeout(page, TIMEOUT_GET_TABLE));
 
   // console.log(page.url());
   if (page.url() === urlLogin) {
@@ -100,7 +103,7 @@ exports.acountVaildCheck = async (id, pw) => {
     loginXPath
   );
 
-  await new Promise((page) => setTimeout(page, 3000));
+  await new Promise((page) => setTimeout(page, TIMEOUT_ACCOUNT_VALID));
 
   // console.log(page.url());
   if (page.url() === urlLogin) {
