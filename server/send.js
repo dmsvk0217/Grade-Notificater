@@ -1,5 +1,5 @@
 const { SolapiMessageService } = require("solapi");
-const { messageServiceKey } = require("./config");
+const { messageServiceKey } = require("../config");
 
 const messageService = new SolapiMessageService(
   messageServiceKey.apikey,
@@ -8,8 +8,8 @@ const messageService = new SolapiMessageService(
 
 function sendGradeUpdateMsg(updatedSubject, phone) {
   messageService.send({
-    to: "01056615102",
-    from: phone,
+    from: "01056615102",
+    to: phone,
     text: `${updatedSubject}의 성적이 업데이트되었습니다.`,
   });
 }

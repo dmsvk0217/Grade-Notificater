@@ -3,7 +3,7 @@ const sendGradeUpdateMsg = require("../server/send.js");
 const clientAPI = require("../server/client_api.js");
 
 // const sendTimeInterval = 60 * 60 * 1000;
-const sendTimeInterval = 5 * 1000;
+const sendTimeInterval = 30 * 1000; // 30초
 
 async function gradeNotofication() {
   // 모든 유저데이터 가져오기
@@ -47,7 +47,7 @@ async function gradeNotofication() {
             row[row.length - 3] +
             "으로 업데이트 되었습니다."
         );
-        // sendGradeUpdateMsg(updatedSubject, phone);
+        sendGradeUpdateMsg(updatedSubject, phone);
         firebasedb.updateGradeArrayByUserdoc(userDoc, updatedGradeArray);
       }
     }
