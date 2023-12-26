@@ -18,7 +18,7 @@ const {
 const app = express();
 const port = 4000;
 // const sendTimeInterval = 60 * 60 * 1000;
-const sendTimeInterval = 1000;
+const sendTimeInterval = 15 * 1000;
 
 app.use(
   cors({

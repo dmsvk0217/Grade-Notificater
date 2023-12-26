@@ -100,7 +100,7 @@ exports.acountVaildCheck = async (id, pw) => {
     loginXPath
   );
 
-  await new Promise((page) => setTimeout(page, 300));
+  await new Promise((page) => setTimeout(page, 3000));
 
   // console.log(page.url());
   if (page.url() === urlLogin) {
