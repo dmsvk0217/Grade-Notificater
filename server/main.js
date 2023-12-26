@@ -18,7 +18,7 @@ const {
 const app = express();
 const port = 4000;
 // const sendTimeInterval = 60 * 60 * 1000;
-const sendTimeInterval = 5000;
+const sendTimeInterval = 1000;
 
 app.use(
   cors({
@@ -36,11 +36,11 @@ app.post("/api/submit", async (req, res) => {
     const id = req.body.id;
     const pw = req.body.pw;
     const phone = req.body.phone;
-    const data = await clientAPI.crawlGradeArray(id, pw);
+    let data = await clientAPI.crawlGradeArray(id, pw);
 
     console.log("🚀 ~ file: main.js:28 ~ app.post ~ data:", data);
 
-    const result = await clientAPI.submit(id, pw, phone, data);
+    let result = await clientAPI.submit(id, pw, phone, data);
     if (!result) {
       res.status(400).json({ error: msgSubmitFail });
     } else {
@@ -56,7 +56,7 @@ app.post("/api/AccountVaildCheck", async (req, res) => {
   try {
     const id = req.body.id;
     const pw = req.body.pw;
-    const result = await clientAPI.acountVaildCheck(id, pw);
+    let result = await clientAPI.acountVaildCheck(id, pw);
     if (!result) {
       // false -> 로그인 실패
       res.status(400).json({ error: msgAccountInvaild });
@@ -73,7 +73,7 @@ app.post("/api/AccountVaildCheck", async (req, res) => {
 app.post("/api/phoneVaildCheck", async (req, res) => {
   try {
     const phone = req.body.phone;
-    const result = await clientAPI.phoneVaildCheck(phone);
+    let result = await clientAPI.phoneVaildCheck(phone);
     if (result) {
       console.log(`전화번호 ${phone}는 중복됩니다.`);
       res.status(400).json({ error: msgPhoneInvaild });
@@ -92,7 +92,7 @@ app.post("/api/idVaildCheck", async (req, res) => {
     const id = req.body.id;
     console.log("🚀 ~ file: main.js:94 ~ app.post ~ id:", id);
 
-    const result = await clientAPI.idVaildCheck(id);
+    let result = await clientAPI.idVaildCheck(id);
     if (result) {
       console.log(`아이디 ${id}는 중복됩니다.`);
       res.status(400).json({ error: msgIdInvaild });
