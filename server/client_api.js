@@ -10,10 +10,10 @@ const {
 } = require("./consts.js");
 
 const TIMEOUT_ACCOUNT_VALID = 1000;
-const TIMEOUT_GET_TABLE = 3000;
+const TIMEOUT_GET_TABLE = 1000;
 
 exports.crawlTable = async (id, pw, phone) => {
-  // console.log(phone, "browser");
+  console.log(phone, "browser");
   const browser = await puppeteer.launch({
     headless: true,
     PUPPETEER_DISABLE_HEADLESS_WARNING: true,
@@ -26,40 +26,39 @@ exports.crawlTable = async (id, pw, phone) => {
   console.log(phone, "newPage");
   const page = await browser.newPage();
 
-  // console.log(phone, "goto(urlLogin)");
+  console.log(phone, "goto(urlLogin)");
   await page.goto(urlLogin);
 
   const frame = page.frames().find((frame) => frame.name() === "MainFrame");
 
   // console.log(phone, "idXPath");
   const idInput = await frame.waitForSelector(idXPath);
-  // console.log(phone, "typeid");
+  console.log(phone, "typeid");
   await idInput.type(id);
 
   // console.log(phone, "passwordXPath");
   const passwordInput = await frame.waitForSelector(passwordXPath);
-  // console.log(phone, "typepw");
+  console.log(phone, "typepw");
   await passwordInput.type(pw);
 
-  // console.log(phone, "click");
+  console.log(phone, "click");
   await frame.evaluate(
     (loginXPath) => document.querySelector(loginXPath).click(),
     loginXPath
   );
 
-  // console.log(phone, "1000");
   await new Promise((page) => setTimeout(page, TIMEOUT_GET_TABLE));
 
-  // console.log(page.url());
   if (page.url() === urlLogin) {
     return msgLoginFail;
   }
 
   // console.log(phone, "urlHome");
   await page.goto(urlHome);
+  console.log("after goto : ", page.url());
 
   // Get table data
-  // console.log(phone, "Get table data");
+  console.log(phone, "Get table data");
   let result = await page.evaluate(() => {
     const table = document.getElementById("att_list");
     const rows = table.querySelectorAll("tr");
@@ -70,8 +69,8 @@ exports.crawlTable = async (id, pw, phone) => {
     });
   });
 
-  // console.table(result);
-  // console.log(phone, "browser.close();");
+  console.table(result);
+  console.log(phone, "browser.close();");
 
   await browser.close();
   return result;
