@@ -17,9 +17,21 @@ const TIMEOUT_GET_TABLE = 1000;
 // const sendTimeInterval = 60 * 60 * 1000;
 const sendTimeInterval = 30 * 1000; // 30초
 
+function printTime() {
+  const { DateTimeFormat } = Intl;
+  const now = new Date();
+  const koreaTime = new Date(now.getTime());
+
+  const formattedTime = new DateTimeFormat("ko-KR", {
+    timeStyle: "medium",
+    hour12: false,
+  }).format(koreaTime);
+
+  console.log("현재 시각:", formattedTime);
+}
+
 async function gradeNotofication() {
   console.log("[gradeNotofication] " + new Date().toLocaleString());
-
   // 모든 유저데이터 가져오기
   let userDocs = await firebasedb.getAllUser();
   var count = 0;
@@ -49,57 +61,53 @@ async function gradeNotofication() {
     let updatedGradeArray = [...storedGradeArray];
 
     try {
-      console.log(
-        "\n\n\n🚀 ~ file: main.js:43 ~ gradeNotofication ~ count:",
-        count
-      );
-      console.log("🚀 ~ file: main.js:45 ~ gradeNotofication ~ id:", id);
-      console.log("🚀 ~ file: main.js:47 ~ gradeNotofication ~ pw:", pw);
+      console.log("\n\n count:", count, " id: ", id, " pw: ", pw);
+      printTime();
 
-      console.log(
-        phone,
-        "goto(",
-        "https://hisnet.handong.edu/login/login.php",
-        ")"
-      );
+      // console.log(
+      //   phone,
+      //   "goto(",
+      //   "https://hisnet.handong.edu/login/login.php",
+      //   ")"
+      // );
       await page.goto("https://hisnet.handong.edu/login/login.php");
-      console.log("after goto urlLogin : ", page.url());
+      // console.log("after goto urlLogin : ", page.url());
 
       // console.log(phone, "idXPath");
       const idInput = await page.waitForSelector(idXPath);
-      console.log(phone, "typeid");
+      // console.log(phone, "typeid");
       await idInput.type(id);
 
       // console.log(phone, "passwordXPath");
       const passwordInput = await page.waitForSelector(passwordXPath);
-      console.log(phone, "typepw");
+      // console.log(phone, "typepw");
       await passwordInput.type(pw);
 
-      console.log(phone, "click");
+      // console.log(phone, "click");
       await page.evaluate(
         (loginXPath) => document.querySelector(loginXPath).click(),
         loginXPath
       );
 
       // await new Promise((page) => setTimeout(page, TIMEOUT_GET_TABLE));
-      console.log("before waitForNavigation");
+      // console.log("before waitForNavigation");
       await page.waitForNavigation({
         timeout: 60000,
         waitUntil: "load",
       });
-      console.log("after waitForNavigation");
+      // console.log("after waitForNavigation");
       // console.log(phone, "urlHome");
-      console.log("before urlHome : ", page.url());
+      // console.log("before urlHome : ", page.url());
       if (page.url() === "https://hisnet.handong.edu/login/login.php") {
         console.log(
           "--------------------------------------[continue]--------------------------------------"
         );
       } else {
         await page.goto(urlHome);
-        console.log("after urlHome : ", page.url());
+        // console.log("after urlHome : ", page.url());
 
         // Get table data
-        console.log(phone, "Get table data");
+        // console.log(phone, "Get table data");
         resultTable = await page.evaluate(() => {
           const table = document.getElementById("att_list");
           const rows = table.querySelectorAll("tr");
@@ -111,13 +119,7 @@ async function gradeNotofication() {
         });
         // console.table(resultTable);
 
-        console.log(
-          count,
-          "번째 유저 : ",
-          id,
-          " : ",
-          clientAPI.tableToGradeArray(resultTable)
-        );
+        console.log(clientAPI.tableToGradeArray(resultTable));
 
         for (let index = 0; index < resultTable.length; index++) {
           const row = resultTable[index];
