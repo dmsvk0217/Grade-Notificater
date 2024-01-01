@@ -28,6 +28,8 @@ app.use(express.json());
 
 // 라우팅 설정
 app.post("/api/submit", async (req, res) => {
+  printTime("submit");
+
   try {
     const id = req.body.id;
     const pw = req.body.pw;
@@ -49,6 +51,7 @@ app.post("/api/submit", async (req, res) => {
 });
 
 app.post("/api/AccountVaildCheck", async (req, res) => {
+  printTime("AccountVaildCheck");
   try {
     const id = req.body.id;
     const pw = req.body.pw;
@@ -67,6 +70,7 @@ app.post("/api/AccountVaildCheck", async (req, res) => {
 });
 
 app.post("/api/phoneVaildCheck", async (req, res) => {
+  printTime("phoneVaildCheck");
   try {
     const phone = req.body.phone;
     let result = await clientAPI.phoneVaildCheck(phone);
@@ -84,10 +88,9 @@ app.post("/api/phoneVaildCheck", async (req, res) => {
 });
 
 app.post("/api/idVaildCheck", async (req, res) => {
+  printTime("idVaildCheck");
   try {
     const id = req.body.id;
-    console.log("🚀 ~ file: main.js:94 ~ app.post ~ id:", id);
-
     let result = await clientAPI.idVaildCheck(id);
     if (result) {
       console.log(`아이디 ${id}는 중복됩니다.`);
@@ -106,3 +109,16 @@ app.post("/api/idVaildCheck", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+function printTime(name) {
+  const { DateTimeFormat } = Intl;
+  const now = new Date();
+  const koreaTime = new Date(now.getTime());
+
+  const formattedTime = new DateTimeFormat("ko-KR", {
+    timeStyle: "medium",
+    hour12: false,
+  }).format(koreaTime);
+
+  console.log("[", name, "] 현재 시각: ", formattedTime);
+}

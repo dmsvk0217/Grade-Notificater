@@ -89,7 +89,7 @@ async function printAllDocumentIds() {
 
 // 호출
 // printAllDocumentIds().finally(() => console.log("Printing completed."));
-deleteDocumentById("jn7656");
+// deleteDocumentById("jn7656");
 getTotalDocumentCount().finally(() => console.log("Printing completed."));
 // checkDocumentExistsById("kimgoeun0315");
 // getUserIdByPhone("01026459670");

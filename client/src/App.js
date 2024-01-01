@@ -263,23 +263,33 @@ function App() {
     }
   };
 
+  const handleTest = async () => {
+    openModal();
+  };
+
+  var popupWidth = 200;
+  var popupHeight = 100;
+
+  var popupX = window.screen.width / 2 - popupWidth / 2;
+  var popupY = window.screen.height / 2 - popupHeight / 2;
+
   return (
     <div className="app-container">
-      <div>
+      <div className="modal">
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={closeModal}
           style={{
             overlay: {
               backgroundColor: "gray",
+              // left: `${popupX}px`,
+              // top: `${popupY}px`,
             },
             content: {
-              paddingBottom: "0",
+              paddingBottom: "0px",
               color: "black",
-              left: "20vw",
-              right: "20vw",
-              top: "40vh",
-              bottom: "43vh",
+              width: `${popupWidth}px`,
+              height: `${popupHeight}px`,
             },
           }}
         >
@@ -292,7 +302,6 @@ function App() {
             <GiPartyPopper className="done-icon" size={25} />
           </div>
           <br />
-
           <button onClick={closeModal}>닫기</button>
         </Modal>
       </div>
@@ -378,6 +387,11 @@ function App() {
           {buttonContentSubmit}
         </button>
         {submitError && <div className="error-message">{submitError}</div>}
+        <br />
+        <br />
+        <button type="button" onClick={handleTest}>
+          등록팝업
+        </button>
       </form>
     </div>
   );

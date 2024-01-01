@@ -29,20 +29,18 @@ exports.crawlTable = async (id, pw, phone) => {
   console.log(phone, "goto(urlLogin)");
   await page.goto(urlLogin);
 
-  const frame = page.frames().find((frame) => frame.name() === "MainFrame");
-
   // console.log(phone, "idXPath");
-  const idInput = await frame.waitForSelector(idXPath);
+  const idInput = await page.waitForSelector(idXPath);
   console.log(phone, "typeid");
   await idInput.type(id);
 
   // console.log(phone, "passwordXPath");
-  const passwordInput = await frame.waitForSelector(passwordXPath);
+  const passwordInput = await page.waitForSelector(passwordXPath);
   console.log(phone, "typepw");
   await passwordInput.type(pw);
 
   console.log(phone, "click");
-  await frame.evaluate(
+  await page.evaluate(
     (loginXPath) => document.querySelector(loginXPath).click(),
     loginXPath
   );
@@ -89,15 +87,13 @@ exports.acountVaildCheck = async (id, pw) => {
 
   await page.goto(urlLogin);
 
-  const frame = page.frames().find((frame) => frame.name() === "MainFrame");
-
-  const idInput = await frame.waitForSelector(idXPath);
+  const idInput = await page.waitForSelector(idXPath);
   await idInput.type(id);
 
-  const passwordInput = await frame.waitForSelector(passwordXPath);
+  const passwordInput = await page.waitForSelector(passwordXPath);
   await passwordInput.type(pw);
 
-  await frame.evaluate(
+  await page.evaluate(
     (loginXPath) => document.querySelector(loginXPath).click(),
     loginXPath
   );

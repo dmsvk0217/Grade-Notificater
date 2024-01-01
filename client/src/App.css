@@ -3,6 +3,9 @@ body {
   font-family: "Arial", sans-serif;
 }
 
+.modal {
+}
+
 .spinner {
   animation-name: spin;
   animation-duration: 500ms;

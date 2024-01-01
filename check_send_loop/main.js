@@ -67,10 +67,10 @@ async function gradeNotofication() {
       // console.log(
       //   phone,
       //   "goto(",
-      //   "https://hisnet.handong.edu/login/login.php",
+      //   urlLogin,
       //   ")"
       // );
-      await page.goto("https://hisnet.handong.edu/login/login.php");
+      await page.goto(urlLogin);
       // console.log("after goto urlLogin : ", page.url());
 
       // console.log(phone, "idXPath");
@@ -98,7 +98,7 @@ async function gradeNotofication() {
       // console.log("after waitForNavigation");
       // console.log(phone, "urlHome");
       // console.log("before urlHome : ", page.url());
-      if (page.url() === "https://hisnet.handong.edu/login/login.php") {
+      if (page.url() === urlLogin) {
         console.log(
           "--------------------------------------[continue]--------------------------------------"
         );

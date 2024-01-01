@@ -1,7 +1,7 @@
 const id = "dmsvk01";
 const pw = "111111";
 const phone = "01056615102";
-const urlLogin = "https://hisnet.handong.edu/";
+const urlLogin = "https://hisnet.handong.edu/login/login.php";
 const urlHome = "https://hisnet.handong.edu/haksa/record/HREC130M.php";
 const msgAccountInvaild = "Incorrect Account";
 const msgAccountVaild = "Correct Account";
