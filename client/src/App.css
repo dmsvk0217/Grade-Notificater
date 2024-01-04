@@ -4,6 +4,18 @@ body {
 }
 
 .modal {
+  /* design */
+  background-color: white;
+  padding: 20px;
+
+  /* position */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
 }
 
 .spinner {
@@ -73,10 +85,6 @@ button:hover {
   margin-left: 5px;
 }
 
-.input-button:active {
-  /* background-color: #ff86c8; */
-}
-
 .checked-button {
   display: flex;
 }
@@ -94,12 +102,11 @@ button:hover {
   display: flex;
 }
 
-.done-texts {
-  flex: 4;
+.done-text-container {
+  flex: 5;
 }
 
 .done-text {
-  flex: 4;
   text-align: center;
   margin: 0;
   font-size: 13px;

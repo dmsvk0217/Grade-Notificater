@@ -1,46 +1,15 @@
 import React, { useState } from "react";
+
 import axios from "axios";
-import { CiCircleCheck } from "react-icons/ci";
-import { GiPartyPopper } from "react-icons/gi";
-import "./App.css";
 import Modal from "react-modal";
-import {
-  msgIdInvaild,
-  msgIdDupError,
-  msgAccountInvaild,
-  msgAccountVaild,
-  msgPhoneDupError,
-  msgIdVaild,
-  msgPhoneVaild,
-  msgPhoneInvaild,
-  msgSubmitFail,
-  msgSubmitSuccess,
-} from "./consts.js";
+import msg from "./config/consts.js";
 
-const serverURL = require("./config.js");
+import { GiPartyPopper } from "react-icons/gi";
+import { ContentDoneCheck } from "./common/ContentDoneCheck.js";
+import { Loader } from "./common/Loader.js";
+import "./App.css";
 
-const ContentDoneCheck = (
-  <div className="checked-button">
-    <p className="checked-text">확인됨</p>
-    <CiCircleCheck className="checked-icon" />
-  </div>
-);
-
-const Loader = (
-  <svg
-    width="13"
-    className="spinner"
-    height="13"
-    viewBox="0 0 13 14"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M4.38798 12.616C3.36313 12.2306 2.46328 11.5721 1.78592 10.7118C1.10856 9.85153 0.679515 8.82231 0.545268 7.73564C0.411022 6.64897 0.576691 5.54628 1.02433 4.54704C1.47197 3.54779 2.1845 2.69009 3.08475 2.06684C3.98499 1.4436 5.03862 1.07858 6.13148 1.01133C7.22435 0.944078 8.31478 1.17716 9.28464 1.68533C10.2545 2.19349 11.0668 2.95736 11.6336 3.89419C12.2004 4.83101 12.5 5.90507 12.5 7"
-      stroke="white"
-    />
-  </svg>
-);
+const serverURL = require("./config/config.js");
 
 function App() {
   const [id, setId] = useState("");
@@ -100,7 +69,7 @@ function App() {
     setButtonContentPhone("중복확인");
   };
 
-  const handleCheckDuplicateId = async () => {
+  async function handleCheckDuplicateId() {
     console.log("clicked id");
     setLoadingId(true);
     setButtonContentId(Loader);
@@ -110,7 +79,7 @@ function App() {
       });
       console.log("🚀 ~ file: App.js:35 ~ result ~ response:", response.data);
       const result = response.data.result;
-      if (response.status === 200 && result === msgIdVaild) {
+      if (response.status === 200 && result === msg.IdVaild) {
         setIdError("");
         setCheckedID(true);
         setLoadingId(true);
@@ -120,9 +89,9 @@ function App() {
       if (
         error.response &&
         error.response.status === 400 &&
-        error.response.data.error === msgIdInvaild
+        error.response.data.error === msg.IdInvaild
       ) {
-        setIdError(msgIdDupError);
+        setIdError(msg.ServIdDupError);
         setLoadingId(false);
         setButtonContentId("중복확인");
       } else {
@@ -132,7 +101,7 @@ function App() {
         setButtonContentId("중복확인");
       }
     }
-  };
+  }
 
   const handleCheckAccountVaildation = async () => {
     console.log("clicked Account");
@@ -156,7 +125,7 @@ function App() {
         "🚀 ~ file: App.js:84 ~ handleCheckAccountVaildation ~ result:",
         result
       );
-      if (response.status === 200 && result === msgAccountVaild) {
+      if (response.status === 200 && result === msg.ServAccountVaild) {
         setAccountError("");
         setCheckedAccount(true);
         setLoadingAccount(true);
@@ -166,7 +135,7 @@ function App() {
       if (
         error.response &&
         error.response.status === 400 &&
-        error.response.data.error === msgAccountInvaild
+        error.response.data.error === msg.ServAccountInvaild
       ) {
         setAccountError("*유효하지 않은 히즈넷 계정입니다.");
         setLoadingAccount(false);
@@ -201,7 +170,7 @@ function App() {
         "🚀 ~ file: App.js:89 ~ handleCheckDuplicatePhone ~ result:",
         result
       );
-      if (response.status === 200 && result === msgPhoneVaild) {
+      if (response.status === 200 && result === msg.ServPhoneVaild) {
         setPhoneError("");
         setCheckedPhone(true);
         setLoadingPhone(true);
@@ -211,9 +180,9 @@ function App() {
       if (
         error.response &&
         error.response.status === 400 &&
-        error.response.data.error === msgPhoneInvaild
+        error.response.data.error === msg.ServPhoneInvaild
       ) {
-        setPhoneError(msgPhoneDupError);
+        setPhoneError(msg.PhoneDupError);
         setLoadingPhone(false);
         setButtonContentPhone("중복확인");
       } else {
@@ -242,7 +211,7 @@ function App() {
       console.log("🚀 ~ file: App.js:181 ~ handleSubmit ~ response:", response);
       const result = response.data.result;
       console.log("🚀 ~ file: App.js:168 ~ handleSubmit ~ result:", result);
-      if (response.status === 200 && result === msgSubmitSuccess) {
+      if (response.status === 200 && result === msg.SubmitSuccess) {
         setSubmitError("");
         openModal();
         setLoadingSubmit(false);
@@ -251,9 +220,9 @@ function App() {
       if (
         error.response &&
         error.response.status === 400 &&
-        error.response.data.error === msgSubmitFail
+        error.response.data.error === msg.SubmitFail
       ) {
-        setSubmitError(msgPhoneDupError);
+        setSubmitError(msg.PhoneDupError);
         setLoadingSubmit(false);
       } else {
         setSubmitError("*알 수 없는 서버오류 발생.");
@@ -267,44 +236,29 @@ function App() {
     openModal();
   };
 
-  var popupWidth = 200;
-  var popupHeight = 100;
-
-  var popupX = window.screen.width / 2 - popupWidth / 2;
-  var popupY = window.screen.height / 2 - popupHeight / 2;
-
   return (
     <div className="app-container">
-      <div className="modal">
-        <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={closeModal}
-          style={{
-            overlay: {
-              backgroundColor: "gray",
-              // left: `${popupX}px`,
-              // top: `${popupY}px`,
-            },
-            content: {
-              paddingBottom: "0px",
-              color: "black",
-              width: `${popupWidth}px`,
-              height: `${popupHeight}px`,
-            },
-          }}
-        >
-          <div className="done-row">
-            <GiPartyPopper className="done-icon" size={25} />
-            <div className="done-texts">
-              <p className="done-text">축하합니다. </p>
-              <p className="done-text">등록이 완료되었습니다!</p>
-            </div>
-            <GiPartyPopper className="done-icon" size={25} />
+      <Modal
+        className="modal"
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={{
+          overlay: {
+            backgroundColor: "gray",
+          },
+        }}
+      >
+        <div className="done-row">
+          <GiPartyPopper className="done-icon" size={25} />
+          <div className="done-text-container">
+            <p className="done-text">축하합니다.</p>
+            <p className="done-text">등록이 완료되었습니다!</p>
           </div>
-          <br />
-          <button onClick={closeModal}>닫기</button>
-        </Modal>
-      </div>
+          <GiPartyPopper className="done-icon" size={25} />
+        </div>
+        <br />
+        <button onClick={closeModal}>닫기</button>
+      </Modal>
       <form className="signup-form">
         <h2 className="header-text">히즈넷 성적 알림 서비스</h2>
         <div className="content-text">
