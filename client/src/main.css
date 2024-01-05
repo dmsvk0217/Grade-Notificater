@@ -1,0 +1,13 @@
+.flex-center {
+  /* style */
+  height: 100vh;
+
+  /* position */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  width: 120px;
+}

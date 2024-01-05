@@ -233,6 +233,7 @@ function App() {
   };
 
   const handleTest = async () => {
+    console.log("handleTest");
     openModal();
   };
 
