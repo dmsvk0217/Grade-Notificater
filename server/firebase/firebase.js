@@ -51,7 +51,7 @@ exports.checkDuplicateID = async (id) => {
     const q = query(collection(db, "user"), where("id", "==", id));
     const querySnapshot = await getDocs(q);
 
-    return !querySnapshot.empty; // 중복된 전화번호가 있으면 true, 없으면 false 반환
+    return !querySnapshot.empty; // 중복된 ID가 있으면 true, 없으면 false 반환
   } catch (error) {
     console.error("Error checking duplicate id number:", error.message);
     return false; // 에러가 발생하면 중복이 없다고 가정

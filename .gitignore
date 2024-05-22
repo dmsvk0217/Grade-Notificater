@@ -4,4 +4,5 @@
 /node_modules
 /key
 /config.js
+/server/firebase/db_config.js
 .DS_Store

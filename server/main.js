@@ -26,9 +26,8 @@ app.use(
 );
 app.use(express.json());
 
-// 라우팅 설정
 app.post("/api/submit", async (req, res) => {
-  printTime("submit");
+  printAPILog("submit");
 
   try {
     const id = req.body.id;
@@ -51,7 +50,7 @@ app.post("/api/submit", async (req, res) => {
 });
 
 app.post("/api/AccountVaildCheck", async (req, res) => {
-  printTime("AccountVaildCheck");
+  printAPILog("AccountVaildCheck");
   try {
     const id = req.body.id;
     const pw = req.body.pw;
@@ -70,7 +69,7 @@ app.post("/api/AccountVaildCheck", async (req, res) => {
 });
 
 app.post("/api/phoneVaildCheck", async (req, res) => {
-  printTime("phoneVaildCheck");
+  printAPILog("phoneVaildCheck");
   try {
     const phone = req.body.phone;
     let result = await clientAPI.phoneVaildCheck(phone);
@@ -88,7 +87,7 @@ app.post("/api/phoneVaildCheck", async (req, res) => {
 });
 
 app.post("/api/idVaildCheck", async (req, res) => {
-  printTime("idVaildCheck");
+  printAPILog("idVaildCheck");
   try {
     const id = req.body.id;
     let result = await clientAPI.idVaildCheck(id);
@@ -110,15 +109,17 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
-function printTime(name) {
-  const { DateTimeFormat } = Intl;
-  const now = new Date();
-  const koreaTime = new Date(now.getTime());
+function printAPILog(name) {
+  console.log("[%s] %s", getTime(), name);
+}
 
-  const formattedTime = new DateTimeFormat("ko-KR", {
-    timeStyle: "medium",
-    hour12: false,
-  }).format(koreaTime);
+function getTime() {
+  var today = new Date();
 
-  console.log("[", name, "] 현재 시각: ", formattedTime);
+  var hours = ("0" + today.getHours()).slice(-2);
+  var minutes = ("0" + today.getMinutes()).slice(-2);
+  var seconds = ("0" + today.getSeconds()).slice(-2);
+  var timeString = hours + ":" + minutes + ":" + seconds;
+
+  return timeString;
 }

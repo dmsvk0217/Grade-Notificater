@@ -91,7 +91,7 @@ function App() {
         error.response.status === 400 &&
         error.response.data.error === msg.IdInvaild
       ) {
-        setIdError(msg.ServIdDupError);
+        setIdError(msg.IdDupError);
         setLoadingId(false);
         setButtonContentId("중복확인");
       } else {
@@ -121,10 +121,7 @@ function App() {
         pw: password,
       });
       const result = response.data.result;
-      console.log(
-        "🚀 ~ file: App.js:84 ~ handleCheckAccountVaildation ~ result:",
-        result
-      );
+      console.log("🚀 ~ file: App.js:84 ~ handleCheckAccountVaildation ~ result:", result);
       if (response.status === 200 && result === msg.ServAccountVaild) {
         setAccountError("");
         setCheckedAccount(true);
@@ -166,10 +163,7 @@ function App() {
         phone: phone,
       });
       const result = response.data.result;
-      console.log(
-        "🚀 ~ file: App.js:89 ~ handleCheckDuplicatePhone ~ result:",
-        result
-      );
+      console.log("🚀 ~ file: App.js:89 ~ handleCheckDuplicatePhone ~ result:", result);
       if (response.status === 200 && result === msg.ServPhoneVaild) {
         setPhoneError("");
         setCheckedPhone(true);
@@ -247,8 +241,7 @@ function App() {
           overlay: {
             backgroundColor: "gray",
           },
-        }}
-      >
+        }}>
         <div className="done-row">
           <GiPartyPopper className="done-icon" size={25} />
           <div className="done-text-container">
@@ -263,12 +256,9 @@ function App() {
       <form className="signup-form">
         <h2 className="header-text">히즈넷 성적 알림 서비스</h2>
         <div className="content-text">
-          - 히즈넷 학사정보 성적이 업데이트되면 등록하신 전화번호로 알림문자를
-          보내드립니다.
+          - 히즈넷 학사정보 성적이 업데이트되면 등록하신 전화번호로 알림문자를 보내드립니다.
         </div>
-        <div className="content-text">
-          - 입력된 정보는 성적알림 외의 용도로 사용되지 않습니다.
-        </div>
+        <div className="content-text">- 입력된 정보는 성적알림 외의 용도로 사용되지 않습니다.</div>
         <br />
         <div className="input-container">
           <div className="input-container">
@@ -285,8 +275,7 @@ function App() {
                 type="button"
                 className="input-button"
                 disabled={loadingId}
-                onClick={handleCheckDuplicateId}
-              >
+                onClick={handleCheckDuplicateId}>
                 {buttonContentId}
               </button>
             </div>
@@ -307,14 +296,11 @@ function App() {
                 type="button"
                 className="input-button"
                 disabled={loadingAccount}
-                onClick={handleCheckAccountVaildation}
-              >
+                onClick={handleCheckAccountVaildation}>
                 {buttonContentAccount}
               </button>
             </div>
-            {accountError && (
-              <div className="error-message">{accountError}</div>
-            )}
+            {accountError && <div className="error-message">{accountError}</div>}
           </div>
 
           {/* <label htmlFor="phone">알림받으실 전화번호</label> */}
@@ -330,8 +316,7 @@ function App() {
               type="button"
               className="input-button"
               disabled={loadingPhone}
-              onClick={handleCheckDuplicatePhone}
-            >
+              onClick={handleCheckDuplicatePhone}>
               {buttonContentPhone}
             </button>
           </div>

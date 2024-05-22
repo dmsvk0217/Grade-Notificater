@@ -1,7 +1,8 @@
 const puppeteer = require("puppeteer");
-const firebasedb = require("./firebase.js");
+const firebasedb = require("./firebase/firebase.js");
 const {
   urlLogin,
+  urlLoginFail,
   urlHome,
   msgLoginFail,
   idXPath,
@@ -17,11 +18,7 @@ exports.crawlTable = async (id, pw, phone) => {
   const browser = await puppeteer.launch({
     headless: true,
     PUPPETEER_DISABLE_HEADLESS_WARNING: true,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--PUPPETEER_DISABLE_HEADLESS_WARNING",
-    ],
+    args: ["--no-sandbox", "--disable-setuid-sandbox", "--PUPPETEER_DISABLE_HEADLESS_WARNING"],
   });
   console.log(phone, "newPage");
   const page = await browser.newPage();
@@ -40,10 +37,7 @@ exports.crawlTable = async (id, pw, phone) => {
   await passwordInput.type(pw);
 
   console.log(phone, "click");
-  await page.evaluate(
-    (loginXPath) => document.querySelector(loginXPath).click(),
-    loginXPath
-  );
+  await page.evaluate((loginXPath) => document.querySelector(loginXPath).click(), loginXPath);
 
   await new Promise((page) => setTimeout(page, TIMEOUT_GET_TABLE));
 
@@ -82,7 +76,7 @@ exports.crawlGradeArray = async (id, pw) => {
 };
 
 exports.acountVaildCheck = async (id, pw) => {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({ headless: "new" });
   const page = await browser.newPage();
 
   await page.goto(urlLogin);
@@ -93,15 +87,12 @@ exports.acountVaildCheck = async (id, pw) => {
   const passwordInput = await page.waitForSelector(passwordXPath);
   await passwordInput.type(pw);
 
-  await page.evaluate(
-    (loginXPath) => document.querySelector(loginXPath).click(),
-    loginXPath
-  );
+  await page.evaluate((loginXPath) => document.querySelector(loginXPath).click(), loginXPath);
 
   await new Promise((page) => setTimeout(page, TIMEOUT_ACCOUNT_VALID));
 
-  // console.log(page.url());
-  if (page.url() === urlLogin) {
+  console.log(page.url());
+  if (page.url() === urlLoginFail) {
     return false;
   }
 
@@ -112,7 +103,7 @@ exports.idVaildCheck = async (id) => {
   try {
     return await firebasedb.checkDuplicateID(id);
   } catch (error) {
-    console.error("error:", error);
+    console.error("idVaildCheck error:", error);
   }
 };
 
@@ -120,7 +111,7 @@ exports.phoneVaildCheck = async (phone) => {
   try {
     return await firebasedb.checkDuplicatePhone(phone);
   } catch (error) {
-    console.error("error:", error);
+    console.error("phoneVaildCheck error:", error);
   }
 };
 
@@ -128,6 +119,6 @@ exports.submit = async (id, pw, phone, data) => {
   try {
     return await firebasedb.addUser(id, pw, phone, data);
   } catch (error) {
-    console.error("error:", error);
+    console.error("submit error:", error);
   }
 };
