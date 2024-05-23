@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-
-import axios from "axios";
+import axiosInstance from "./config/config.js";
 import Modal from "react-modal";
 import msg from "./config/consts.js";
 
@@ -8,8 +7,6 @@ import { GiPartyPopper } from "react-icons/gi";
 import { ContentDoneCheck } from "./common/ContentDoneCheck.js";
 import { Loader } from "./common/Loader.js";
 import "./App.css";
-
-const serverURL = require("./config/config.js");
 
 function App() {
   const [id, setId] = useState("");
@@ -74,7 +71,7 @@ function App() {
     setLoadingId(true);
     setButtonContentId(Loader);
     try {
-      const response = await axios.post(`${serverURL}/api/idVaildCheck`, {
+      const response = await axiosInstance.post(`/api/idVaildCheck`, {
         id: id,
       });
       console.log("🚀 ~ file: App.js:35 ~ result ~ response:", response.data);
@@ -116,7 +113,7 @@ function App() {
     setLoadingAccount(true);
     setButtonContentAccount(Loader);
     try {
-      const response = await axios.post(`${serverURL}/api/AccountVaildCheck`, {
+      const response = await axiosInstance.post(`/api/AccountVaildCheck`, {
         id: id,
         pw: password,
       });
@@ -159,7 +156,7 @@ function App() {
     setButtonContentPhone(Loader);
 
     try {
-      const response = await axios.post(`${serverURL}/api/phoneVaildCheck`, {
+      const response = await axiosInstance.post(`/api/phoneVaildCheck`, {
         phone: phone,
       });
       const result = response.data.result;
@@ -197,7 +194,7 @@ function App() {
     setLoadingSubmit(true);
 
     try {
-      const response = await axios.post(`${serverURL}/api/submit`, {
+      const response = await axiosInstance.post(`/api/submit`, {
         id: id,
         pw: password,
         phone: phone,

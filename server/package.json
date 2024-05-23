@@ -17,7 +17,6 @@
     "solapi": "^5.2.4",
     "nodemon": "^3.0.2"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "node main.js",
     "dev": "nodemon main.js"
