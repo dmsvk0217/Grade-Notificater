@@ -1,12 +1,5 @@
-const {
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} = require("firebase/firestore");
-const db = require("./db.js");
+const { collection, addDoc, getDocs, query, updateDoc, where } = require("firebase/firestore");
+const { db } = require("./db.js");
 
 exports.getAllUser = async () => {
   const querySnapshot = await getDocs(collection(db, "user"));

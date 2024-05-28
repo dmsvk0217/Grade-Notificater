@@ -1,17 +1,8 @@
 const express = require("express");
 const clientAPI = require("./client_api.js");
+const util = require("./util.js");
 const cors = require("cors");
-const {
-  msgAccountInvaild,
-  msgAccountVaild,
-  msgPhoneVaild,
-  msgPhoneInvaild,
-  msgServerError,
-  msgIdVaild,
-  msgIdInvaild,
-  msgSubmitFail,
-  msgSubmitSuccess,
-} = require("./consts.js");
+const { messages } = require("./consts.js");
 
 const app = express();
 const port = 4000;
@@ -24,7 +15,7 @@ app.use(
 app.use(express.json());
 
 app.post("/api/submit", async (req, res) => {
-  printAPILog("submit");
+  util.printAPILog("submit");
 
   try {
     const id = req.body.id;
@@ -32,72 +23,70 @@ app.post("/api/submit", async (req, res) => {
     const phone = req.body.phone;
     let data = await clientAPI.crawlGradeArray(id, pw);
 
-    console.log("🚀 ~ file: main.js:28 ~ app.post ~ data:", data);
-
     let result = await clientAPI.submit(id, pw, phone, data);
     if (!result) {
-      res.status(400).json({ error: msgSubmitFail });
+      res.status(400).json({ error: messages.submitFail });
     } else {
-      res.json({ result: msgSubmitSuccess });
+      res.json({ result: messages.submitSuccess });
     }
   } catch (error) {
     console.error("error:", error);
-    res.status(500).json({ error: msgServerError });
+    res.status(500).json({ error: messages.serverError });
   }
 });
 
 app.post("/api/AccountVaildCheck", async (req, res) => {
-  printAPILog("AccountVaildCheck");
+  util.printAPILog("AccountVaildCheck");
   try {
     const id = req.body.id;
     const pw = req.body.pw;
     let result = await clientAPI.acountVaildCheck(id, pw);
     if (!result) {
       // false -> 로그인 실패
-      res.status(400).json({ error: msgAccountInvaild });
+      res.status(400).json({ error: messages.accountInvalid });
     } else {
       // true -> 로그인 성공
-      res.json({ result: msgAccountVaild });
+      res.json({ result: messages.accountValid });
     }
   } catch (error) {
     console.error("error:", error);
-    res.status(500).json({ error: msgServerError });
+    res.status(500).json({ error: messages.serverError });
   }
 });
 
 app.post("/api/phoneVaildCheck", async (req, res) => {
-  printAPILog("phoneVaildCheck");
+  util.printAPILog("phoneVaildCheck");
   try {
     const phone = req.body.phone;
     let result = await clientAPI.phoneVaildCheck(phone);
     if (result) {
       console.log(`전화번호 ${phone}는 중복됩니다.`);
-      res.status(400).json({ error: msgPhoneInvaild });
+      res.status(400).json({ error: messages.phoneInvalid });
     } else {
       console.log(`전화번호 ${phone}는 중복되지 않습니다.`);
-      res.json({ result: msgPhoneVaild });
+      res.json({ result: messages.accountValid });
     }
   } catch (error) {
     console.error("error:", error);
-    res.status(500).json({ error: msgPhoneVaild });
+    res.status(500).json({ error: messages.phoneInvalid });
   }
 });
 
 app.post("/api/idVaildCheck", async (req, res) => {
-  printAPILog("idVaildCheck");
+  util.printAPILog("idVaildCheck");
   try {
     const id = req.body.id;
     let result = await clientAPI.idVaildCheck(id);
     if (result) {
       console.log(`아이디 ${id}는 중복됩니다.`);
-      res.status(400).json({ error: msgIdInvaild });
+      res.status(400).json({ error: messages.idInvalid });
     } else {
       console.log(`아이디 ${id}는 중복되지 않습니다.`);
-      res.json({ result: msgIdVaild });
+      res.json({ result: messages.idValid });
     }
   } catch (error) {
     console.error("error:", error);
-    res.status(500).json({ error: msgIdVaild });
+    res.status(500).json({ error: messages.idInvalid });
   }
 });
 
@@ -105,18 +94,3 @@ app.post("/api/idVaildCheck", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
-function printAPILog(name) {
-  console.log("[%s] %s", getTime(), name);
-}
-
-function getTime() {
-  var today = new Date();
-
-  var hours = ("0" + today.getHours()).slice(-2);
-  var minutes = ("0" + today.getMinutes()).slice(-2);
-  var seconds = ("0" + today.getSeconds()).slice(-2);
-  var timeString = hours + ":" + minutes + ":" + seconds;
-
-  return timeString;
-}

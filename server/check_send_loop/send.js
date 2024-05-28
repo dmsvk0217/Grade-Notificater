@@ -1,5 +1,5 @@
 const { SolapiMessageService } = require("solapi");
-const { messageServiceKey } = require("../config");
+const { messageServiceKey } = require("./messageServiceKey.js");
 
 const messageService = new SolapiMessageService(
   messageServiceKey.apikey,

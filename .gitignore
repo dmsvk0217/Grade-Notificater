@@ -5,4 +5,5 @@
 /key
 /config.js
 /server/firebase/db_config.js
+/server/check_send_loop/messageServiceKey.js
 .DS_Store

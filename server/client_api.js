@@ -13,56 +13,52 @@ const {
 const TIMEOUT_ACCOUNT_VALID = 1000;
 const TIMEOUT_GET_TABLE = 1000;
 
-exports.crawlTable = async (id, pw, phone) => {
-  console.log(phone, "browser");
-  const browser = await puppeteer.launch({
-    headless: true,
-    PUPPETEER_DISABLE_HEADLESS_WARNING: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox", "--PUPPETEER_DISABLE_HEADLESS_WARNING"],
-  });
-  console.log(phone, "newPage");
+exports.crawlTable = async (id, pw) => {
+  const browser = await puppeteer.launch({ headless: "new" });
   const page = await browser.newPage();
 
-  console.log(phone, "goto(urlLogin)");
   await page.goto(urlLogin);
+  console.log("[crawlTable] enter ", urlLogin);
 
-  // console.log(phone, "idXPath");
   const idInput = await page.waitForSelector(idXPath);
-  console.log(phone, "typeid");
   await idInput.type(id);
-
-  // console.log(phone, "passwordXPath");
   const passwordInput = await page.waitForSelector(passwordXPath);
-  console.log(phone, "typepw");
   await passwordInput.type(pw);
 
-  console.log(phone, "click");
   await page.evaluate((loginXPath) => document.querySelector(loginXPath).click(), loginXPath);
 
-  await new Promise((page) => setTimeout(page, TIMEOUT_GET_TABLE));
+  // await new Promise((page) => setTimeout(page, TIMEOUT_GET_TABLE));
+  await page.waitForNavigation({
+    timeout: 50000,
+    waitUntil: "load",
+  });
 
-  if (page.url() === urlLogin) {
+  if (page.url() === urlLogin || page.url() === urlLoginFail) {
+    console.log("[crawlTable] login fail");
     return msgLoginFail;
   }
 
-  // console.log(phone, "urlHome");
   await page.goto(urlHome);
-  console.log("after goto : ", page.url());
+  console.log("[crawlTable] enter ", page.url());
 
-  // Get table data
-  console.log(phone, "Get table data");
   let result = await page.evaluate(() => {
     const table = document.getElementById("att_list");
     const rows = table.querySelectorAll("tr");
 
     return Array.from(rows, (row) => {
-      const cells = row.querySelectorAll("td, th");
-      return Array.from(cells, (cell) => cell.innerText.trim());
+      const cells = row.querySelectorAll("td");
+      return Array.from(cells, (cell, index) => {
+        const element = cell.innerText.trim();
+        console.log(`Index ${index}: ${element}`);
+        if (element === "미입력") return false;
+        else return true;
+      });
     });
   });
 
+  console.table("[crawlTable] result");
   console.table(result);
-  console.log(phone, "browser.close();");
+  console.log("[crawlTable] browser close");
 
   await browser.close();
   return result;
@@ -83,7 +79,6 @@ exports.acountVaildCheck = async (id, pw) => {
 
   const idInput = await page.waitForSelector(idXPath);
   await idInput.type(id);
-
   const passwordInput = await page.waitForSelector(passwordXPath);
   await passwordInput.type(pw);
 
@@ -120,5 +115,6 @@ exports.submit = async (id, pw, phone, data) => {
     return await firebasedb.addUser(id, pw, phone, data);
   } catch (error) {
     console.error("submit error:", error);
+    return false;
   }
 };
