@@ -5,6 +5,4 @@ const { firebaseConfig } = require("./db_config.js");
 const dbApp = initializeApp(firebaseConfig);
 const db = getFirestore(dbApp);
 
-module.exports = {
-  db,
-};
+module.exports = db;

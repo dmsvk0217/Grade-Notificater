@@ -30,9 +30,14 @@ const xpaths = {
     "#loginBoxBg > table:nth-child(2) > tbody > tr > td:nth-child(5) > form > table > tbody > tr:nth-child(3) > td > table > tbody > tr > td:nth-child(2) > input[type=image]",
 };
 
+const TIMEOUT_WAITFOR_NAV = 5000;
+const TIME_INTERVAL_SEND = 60 * 60 * 1000; // 60분
+
 module.exports = {
   credentials,
   urls,
   messages,
   xpaths,
+  TIMEOUT_WAITFOR_NAV,
+  TIME_INTERVAL_SEND,
 };

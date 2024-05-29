@@ -3,17 +3,13 @@ const sendGradeUpdateMsg = require("./send.js");
 const clientAPI = require("../client_api.js");
 const util = require("../util.js");
 const puppeteer = require("puppeteer");
-const { urls, messages, xpaths } = require("../consts.js");
+const { urls, messages, xpaths, TIMEOUT_WAITFOR_NAV, TIME_INTERVAL_SEND } = require("../consts.js");
 
-const TIMEOUT_ACCOUNT_VALID = 1000;
-const TIMEOUT_GET_TABLE = 1000;
+// setInterval(CheckSendRoutine, TIME_INTERVAL_SEND);
+CheckSendRoutine();
 
-const sendTimeInterval = 30 * 1000; // 30초
-// setInterval(gradeNotification, sendTimeInterval);
-gradeNotification();
-
-async function gradeNotification() {
-  const fname = "[gradeNotification] ";
+async function CheckSendRoutine() {
+  const fname = "[CheckSendRoutine] ";
   console.log(fname, util.getTime());
 
   let userDocs = await firebasedb.getAllUser();
@@ -23,20 +19,22 @@ async function gradeNotification() {
   const page = await browser.newPage();
 
   for (const userDoc of userDocs) {
-    count++;
-
     const user = userDoc.data();
     const id = user.id;
     const pw = user.pw;
     const phone = user.phone;
-
     const storedGradeArray = user.data;
     let updatedGradeArray = [...storedGradeArray];
 
-    try {
-      console.log(util.getTime(), " count:", count, " id: ", id, " pw: ", pw);
+    count++;
+    console.log(util.getTime(), " count:", count, " id: ", id, " pw: ", pw);
 
-      await page.goto(urls.login);
+    try {
+      await page.goto(urls.login, {
+        timeout: TIMEOUT_WAITFOR_NAV,
+        waitUntil: "load",
+      });
+
       console.log(fname, "enter ", urls.login);
 
       const idInput = await page.waitForSelector(xpaths.id);
@@ -45,20 +43,24 @@ async function gradeNotification() {
       await passwordInput.type(pw);
 
       await page.evaluate((xpath) => document.querySelector(xpath).click(), xpaths.login);
-
-      // Todo: waitForNavigation과 setTimeout 성능비교
-      // await new Promise((page) => setTimeout(page, TIMEOUT_GET_TABLE));
       await page.waitForNavigation({
-        timeout: 50000,
+        timeout: TIMEOUT_WAITFOR_NAV,
         waitUntil: "load",
       });
+
+      await idInput.dispose();
+      await passwordInput.dispose();
 
       if (page.url() === urls.login || page.url() === urls.loginFail) {
         console.log(fname, "login fail");
         continue;
       }
 
-      await page.goto(urls.home);
+      await page.goto(urls.home, {
+        timeout: TIMEOUT_WAITFOR_NAV,
+        waitUntil: "load",
+      });
+      console.log(fname, "enter ", urls.home);
 
       let resultTable = await getResultTable(page);
       console.table(resultTable);
@@ -79,9 +81,9 @@ async function gradeNotification() {
       console.log(error);
     }
   }
+
   await page.close();
   await browser.close();
-  console.log("browser.close()");
   process.exit();
 }
 

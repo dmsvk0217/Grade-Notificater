@@ -1,17 +1,16 @@
 const { collection, addDoc, getDocs, query, updateDoc, where } = require("firebase/firestore");
-const { db } = require("./db.js");
+const db = require("./db.js");
 
 exports.getAllUser = async () => {
   const querySnapshot = await getDocs(collection(db, "user"));
   const result = [];
   querySnapshot.forEach((doc) => {
-    // console.log(doc.id, " => ", doc.data());
     result.push(doc);
   });
   return result;
 };
 
-exports.addUser = async (id, pw, phone, data) => {
+exports.addUser = async function addUser(id, pw, phone, data) {
   try {
     const docRef = await addDoc(collection(db, "user"), {
       id: id,

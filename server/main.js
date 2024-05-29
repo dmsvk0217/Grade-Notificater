@@ -5,14 +5,12 @@ const cors = require("cors");
 const { messages } = require("./consts.js");
 
 const app = express();
-const port = 4000;
-
+app.use(express.json());
 app.use(
   cors({
     origin: ["http://localhost:3000", "http://3.36.68.224:3000"],
   })
 );
-app.use(express.json());
 
 app.post("/api/submit", async (req, res) => {
   util.printAPILog("submit");
@@ -21,14 +19,11 @@ app.post("/api/submit", async (req, res) => {
     const id = req.body.id;
     const pw = req.body.pw;
     const phone = req.body.phone;
-    let data = await clientAPI.crawlGradeArray(id, pw);
 
-    let result = await clientAPI.submit(id, pw, phone, data);
-    if (!result) {
-      res.status(400).json({ error: messages.submitFail });
-    } else {
-      res.json({ result: messages.submitSuccess });
-    }
+    let result = await clientAPI.submit(id, pw, phone);
+
+    if (result) res.json({ result: messages.submitSuccess });
+    else res.status(400).json({ error: messages.submitFail });
   } catch (error) {
     console.error("error:", error);
     res.status(500).json({ error: messages.serverError });
@@ -37,17 +32,14 @@ app.post("/api/submit", async (req, res) => {
 
 app.post("/api/AccountVaildCheck", async (req, res) => {
   util.printAPILog("AccountVaildCheck");
+
   try {
     const id = req.body.id;
     const pw = req.body.pw;
     let result = await clientAPI.acountVaildCheck(id, pw);
-    if (!result) {
-      // false -> 로그인 실패
-      res.status(400).json({ error: messages.accountInvalid });
-    } else {
-      // true -> 로그인 성공
-      res.json({ result: messages.accountValid });
-    }
+
+    if (result) res.json({ result: messages.accountValid });
+    else res.status(400).json({ error: messages.accountInvalid });
   } catch (error) {
     console.error("error:", error);
     res.status(500).json({ error: messages.serverError });
@@ -56,6 +48,7 @@ app.post("/api/AccountVaildCheck", async (req, res) => {
 
 app.post("/api/phoneVaildCheck", async (req, res) => {
   util.printAPILog("phoneVaildCheck");
+
   try {
     const phone = req.body.phone;
     let result = await clientAPI.phoneVaildCheck(phone);
@@ -74,6 +67,7 @@ app.post("/api/phoneVaildCheck", async (req, res) => {
 
 app.post("/api/idVaildCheck", async (req, res) => {
   util.printAPILog("idVaildCheck");
+
   try {
     const id = req.body.id;
     let result = await clientAPI.idVaildCheck(id);
@@ -90,7 +84,7 @@ app.post("/api/idVaildCheck", async (req, res) => {
   }
 });
 
-// 서버 시작
+const port = 4000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
