@@ -26,6 +26,6 @@
 <br>
 
 ## 5. 추가 정보
-- [블로그 회고](https://dmsvk01.tistory.com/)
+- [블로그 회고](https://dmsvk01.tistory.com/193)
 - 이메일 주소 : dmsvk0217@gmail.com
 
