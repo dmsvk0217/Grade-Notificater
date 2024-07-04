@@ -21,7 +21,7 @@
 <br>
 
 ## 4. 서비스 구조
-![](https://github.com/dmsvk0217/Grade-Notificater/blob/85f58c042a1fd73ef0e2dd1e68f42e094b799716/notification.png)
+![](https://github.com/dmsvk0217/Grade-Notificater/blob/main/notification_structure.png)
 
 <br>
 
